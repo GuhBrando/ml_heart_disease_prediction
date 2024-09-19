@@ -23,9 +23,7 @@ class model_payload(BaseModel):
     ethnicity: str
     sex: str
     age: str
-    weight: str
     height: str
-    race: str
-    region: str
-    medic: str
-    consult: str
+    weight: str 
+    smoker_status: str
+    is_heavy_drinker: str
