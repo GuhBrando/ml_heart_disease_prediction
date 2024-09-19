@@ -5,7 +5,7 @@ class model_payload(BaseModel):
     name: str
     surname: str
     health: str
-    have_private_magic: str
+    have_private_medic: str
     last_checkup: str
     last_exercise: str
     high_blood_presure: str
