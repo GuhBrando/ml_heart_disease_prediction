@@ -16,6 +16,7 @@ class model_payload(BaseModel):
     urban_rural_status: str
     mental_health: str
     physical_activity: str
+    had_depression: str
     aerobic_recomendation: str
     high_cholesterol: str
     asthma: str
