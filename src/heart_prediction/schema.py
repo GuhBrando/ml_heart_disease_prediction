@@ -5,10 +5,10 @@ class model_payload(BaseModel):
     name: str
     surname: str
     health: str
-    have_private_medic: str
+    have_private_doctor: str
     last_checkup: str
     last_exercise: str
-    high_blood_presure: str
+    high_blood_pressure: str
     use_cholesterol_medicine: str
     had_a_stroke: str
     kidney_disease: str

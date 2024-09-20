@@ -12,18 +12,11 @@ async def model_prediction(payload: model_payload):
     calibrated_model = joblib.load(open(r"./models/calibrado_randomForestModeloAtualizado.pkl", "rb"))
     scaler = joblib.load(open(r"./models/calibrado_scalerRandomForestModeloAtualizado.pkl", "rb"))
 
-    columns = ['saude','temMedicoPrivado', 'dataUltimoCheckup', 'exercicioUltimoMes', 
-           'pressaoAlta', 'remedioColesterol', 'teveAVC', 'teveDepressao', 
-           'teveDoencaRenal', 'diabetico', 'areaOndeVive', 'saudeMental', 
-           'atividadesFisicas', 'recomendacaoAerobica', 'colesterolAlto', 'asma', 
-           'etnia', 'genero', 'idade','altura',
-           'peso', 'fumante', 'alcoolatra']
-
     health = int(payload.health)
-    have_private_medic = int(payload.have_private_medic)
+    have_private_doctor = int(payload.have_private_doctor)
     last_checkup = int(payload.last_checkup)
     last_exercise = int(payload.last_exercise)
-    high_blood_presure = int(payload.high_blood_presure)
+    high_blood_pressure = int(payload.high_blood_pressure)
     use_cholesterol_medicine = int(payload.use_cholesterol_medicine)
     had_a_stroke = int(payload.had_a_stroke)
     had_depression = int(payload.had_depression)
@@ -44,9 +37,14 @@ async def model_prediction(payload: model_payload):
     is_heavy_drinker = int(payload.is_heavy_drinker)
 
 
-
-    new_input = pd.DataFrame([[health, have_private_medic, last_checkup, last_exercise,
-                           high_blood_presure, use_cholesterol_medicine, had_a_stroke, had_depression, kidney_disease, 
+    columns = ['saude','temMedicoPrivado', 'dataUltimoCheckup', 'exercicioUltimoMes', 
+           'pressaoAlta', 'remedioColesterol', 'teveAVC', 'teveDepressao', 
+           'teveDoencaRenal', 'diabetico', 'areaOndeVive', 'saudeMental', 
+           'atividadesFisicas', 'recomendacaoAerobica', 'colesterolAlto', 'asma', 
+           'etnia', 'genero', 'idade','altura',
+           'peso', 'fumante', 'alcoolatra']
+    new_input = pd.DataFrame([[health, have_private_doctor, last_checkup, last_exercise,
+                           high_blood_pressure, use_cholesterol_medicine, had_a_stroke, had_depression, kidney_disease, 
                            diabetes, urban_rural_status, mental_health, physical_activity, 
                            aerobic_recomendation, high_cholesterol, asthma, ethnicity, 
                            sex, age, height, weight,
@@ -60,4 +58,5 @@ async def model_prediction(payload: model_payload):
 
     resultado = "Você possui um risco significativo de desenvolver uma doença cardíaca" if predicted_class == 1 else "Você não possui um risco significativo de desenvolver uma doença cardiovascular"
 
-    return {f"Previsão = {resultado}, com uma confiança de {confidence:.2f}%"}
+    return {"input": str(payload),
+            "output": f"Previsão = {resultado}, com uma confiança de {confidence:.2f}%"}
