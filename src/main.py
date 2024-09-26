@@ -17,13 +17,5 @@ app.add_middleware(
     allow_headers=["*"],  # Permite qualquer cabeçalho
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 app.include_router(health_check)
 app.include_router(model_prection_route, prefix = os.environ["API_VERSION"])
