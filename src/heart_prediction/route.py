@@ -9,8 +9,8 @@ route = APIRouter()
 
 @route.post("/model-prediction")
 async def model_prediction(payload: model_payload):
-    calibrated_model = joblib.load(open(r"./models/calibrado_randomForestModeloAtualizado.pkl", "rb"))
-    scaler = joblib.load(open(r"./models/calibrado_scalerRandomForestModeloAtualizado.pkl", "rb"))
+    calibrated_model = joblib.load(open(r"./models/modeloRandomForestCalibrado.pkl", "rb"))
+    scaler = joblib.load(open(r"./models/scalerCalibrado.pkl", "rb"))
 
     health = int(payload.health)
     have_private_doctor = int(payload.have_private_doctor)
