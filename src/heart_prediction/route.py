@@ -9,11 +9,10 @@ from .schema import model_payload
 route = APIRouter()
 
 @route.post("/model-prediction")
-def model_prediction(payload: model_payload):
-    
+async def model_prediction(payload: model_payload):
+	calibrated_model = joblib.load(open(r"./models/modeloRandomForestCalibrado.pkl", "rb"))
+	scaler = joblib.load(open(r"./models/scalerCalibrado.pkl", "rb"))
 
-	calibrated_model = joblib.load(open(r"./models/calibrado_randomForestModeloAtualizado.pkl", "rb"))
-	scaler = joblib.load(open(r"./models/calibrado_scalerRandomForestModeloAtualizado.pkl", "rb"))
 	try:
 		health = int(payload.health)
 		have_private_doctor = int(payload.have_private_doctor)
@@ -41,13 +40,14 @@ def model_prediction(payload: model_payload):
 	except ValueError:
 		# raise TypeConverterError("teste", "teste")
 		raise HTTPException(status_code=400, detail="Erro ao converter valores para int")
-		
+
+
 	columns = ['saude','temMedicoPrivado', 'dataUltimoCheckup', 'exercicioUltimoMes', 
-           'pressaoAlta', 'remedioColesterol', 'teveAVC', 'teveDepressao', 
-           'teveDoencaRenal', 'diabetico', 'areaOndeVive', 'saudeMental', 
-           'atividadesFisicas', 'recomendacaoAerobica', 'colesterolAlto', 'asma', 
-           'etnia', 'genero', 'idade','altura',
-           'peso', 'fumante', 'alcoolatra']
+			'pressaoAlta', 'remedioColesterol', 'teveAVC', 'teveDepressao', 
+			'teveDoencaRenal', 'diabetico', 'areaOndeVive', 'saudeMental', 
+			'atividadesFisicas', 'recomendacaoAerobica', 'colesterolAlto', 'asma', 
+			'etnia', 'genero', 'idade','altura',
+			'peso', 'fumante', 'alcoolatra']
 	new_input = pd.DataFrame([[health, have_private_doctor, last_checkup, last_exercise,
 							high_blood_pressure, use_cholesterol_medicine, had_a_stroke, had_depression, kidney_disease, 
 							diabetes, urban_rural_status, mental_health, physical_activity, 
