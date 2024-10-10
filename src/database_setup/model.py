@@ -2,7 +2,7 @@ import psycopg2
 
 
 conn = psycopg2.connect(user = "postgres",
-                        password = "VONmefjimlVoPExDyYwgvhFdSJJyRNOs",
+                        password = "",
                         host = "autorack.proxy.rlwy.net",
                         port = "45508",
                         database = "railway")
@@ -10,8 +10,7 @@ conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
 cur = conn.cursor()
 
-cur.execute("""DROP TABLE s_weight, s_height""")
-
+#cur.execute("DROP TABLE s_aerobic_recomentation")
 
 cur.execute("""CREATE TABLE IF NOT EXISTS s_patient_name(
                 ID BIGSERIAL PRIMARY KEY,
@@ -88,7 +87,7 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_physical_activity(
             );
             """)
 
-cur.execute("""CREATE TABLE IF NOT EXISTS s_aerobic_recomentation(
+cur.execute("""CREATE TABLE IF NOT EXISTS s_aerobic_recomendation(
                 ID SMALLINT PRIMARY KEY,
                 aerobic_recomentation VARCHAR (100)
             );
@@ -130,6 +129,12 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_age(
             );
             """)
 
+cur.execute("""CREATE TABLE IF NOT EXISTS s_mental_health(
+                ID SMALLINT PRIMARY KEY,
+                mental_health VARCHAR (100)
+            );
+            """)
+
 cur.execute("""CREATE TABLE IF NOT EXISTS s_smoker_status(
                 ID SMALLINT PRIMARY KEY,
                 smoker_status VARCHAR (100)
@@ -142,32 +147,38 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_heavy_drinker(
             );
             """)
 
+cur.execute("""CREATE TABLE IF NOT EXISTS s_last_exercise(
+                ID SMALLINT PRIMARY KEY,
+                last_exercise VARCHAR (100)
+            );
+            """)
+
 cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results(
                 UUID uuid PRIMARY KEY,
                 name_id BIGINT REFERENCES s_patient_name (ID),
                 weight INTEGER,
                 height SMALLINT,
-                health_id SMALLINT,
-                have_private_doctor_id SMALLINT,
-                last_chekup_id SMALLINT,
-                last_exercise_id SMALLINT,
-                high_blood_pressure_id SMALLINT,
-                use_cholesterol_medicine_id SMALLINT,
-                had_a_stroke_id SMALLINT,
-                had_depression_id SMALLINT,
-                kidney_disease_id SMALLINT,
-                diabetes_id SMALLINT,
-                urban_rural_status_id SMALLINT,
-                mental_health_id SMALLINT,
-                physical_activity_id SMALLINT,
-                aerobic_recomendation_id SMALLINT,
-                high_cholesterol_id SMALLINT,
-                asthma_id SMALLINT,
-                ethnicity_id SMALLINT,
-                sex_id SMALLINT,
-                age_id SMALLINT,
-                smoker_status_id SMALLINT,
-                is_heavy_drinker_id SMALLINT,
+                health_id SMALLINT REFERENCES s_health (ID),
+                have_private_doctor_id SMALLINT REFERENCES s_private_doctor (ID),
+                last_checkup_id SMALLINT REFERENCES s_last_checkup (ID),
+                last_exercise_id SMALLINT REFERENCES s_last_exercise (ID),
+                high_blood_pressure_id SMALLINT REFERENCES s_high_blood_pressure (ID),
+                use_cholesterol_meds_id SMALLINT REFERENCES s_use_cholesterol_meds (ID),
+                had_stroke_id SMALLINT REFERENCES s_had_stroke (ID),
+                had_depression_id SMALLINT REFERENCES s_had_depression (ID),
+                kidney_disease_id SMALLINT REFERENCES s_kidney_disease (ID),
+                diabetes_id SMALLINT REFERENCES s_diabetes (ID),
+                urban_rural_status_id SMALLINT REFERENCES s_urban_rural_status (ID),
+                mental_health_id SMALLINT REFERENCES s_mental_health (ID),
+                physical_activity_id SMALLINT REFERENCES s_physical_activity (ID),
+                aerobic_recomendation_id SMALLINT REFERENCES s_aerobic_recomendation (ID),
+                high_cholesterol_id SMALLINT REFERENCES s_high_cholesterol (ID),
+                asthma_id SMALLINT REFERENCES s_asthma (ID),
+                ethnicity_id SMALLINT REFERENCES s_ethnicity (ID),
+                sex_id SMALLINT REFERENCES s_sex (ID),
+                age_id SMALLINT REFERENCES s_age (ID),
+                smoker_status_id SMALLINT REFERENCES s_smoker_status (ID),
+                is_heavy_drinker_id SMALLINT REFERENCES s_heavy_drinker (ID),
                 odate DATE
             );
             """)
