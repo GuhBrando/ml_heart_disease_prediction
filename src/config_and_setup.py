@@ -1,3 +1,4 @@
+import json
 import os
 
 from fastapi import APIRouter, FastAPI
@@ -14,6 +15,11 @@ class ModelPredictionError(Exception):
         super().__init__(self.message, self.name)
 
 app = FastAPI()
+
+with open("src/postgres_setup.json", "r") as read_file:
+    postgres_infos = json.load(read_file)
+os.environ["postgres_user"] = postgres_infos["username"]
+os.environ["postgres_pass"] = postgres_infos["password"]
 
 class GlobalVariables():
     def __init__(self):

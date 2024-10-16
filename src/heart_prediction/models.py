@@ -1,4 +1,5 @@
 
+import os
 import psycopg2
 import uuid
 
@@ -18,7 +19,7 @@ def insert_values_into_table(name_id,
                             urban_rural_status_id,
                             mental_health_id,
                             physical_activity_id,
-                            aerobic_recomendation_id,
+                            aerobic_recommendation_id,
                             high_cholesterol_id,
                             asthma_id,
                             ethnicity_id,
@@ -28,7 +29,7 @@ def insert_values_into_table(name_id,
                             is_heavy_drinker_id,
                             odate):
     conn = psycopg2.connect(user = "postgres", 
-                        password = "", 
+                        password = os.environ["postgres_pass"], 
                         host = "autorack.proxy.rlwy.net", 
                         port = "45508", 
                         database = "railway")
@@ -53,7 +54,7 @@ def insert_values_into_table(name_id,
                     {urban_rural_status_id},
                     {mental_health_id},
                     {physical_activity_id},
-                    {aerobic_recomendation_id},
+                    {aerobic_recommendation_id},
                     {high_cholesterol_id},
                     {asthma_id},
                     {ethnicity_id},
@@ -87,7 +88,7 @@ insert_values_into_table(name_id = 0,
                          mental_health_id = 1,  
                          physical_activity_id = 2,  
                          had_depression_id = 7,  
-                         aerobic_recomendation_id = 2,  
+                         aerobic_recommendation_id = 2,  
                          high_cholesterol_id = 2,  
                          asthma_id = 1,  
                          smoker_status_id = 4,  

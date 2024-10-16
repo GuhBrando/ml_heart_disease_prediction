@@ -27,7 +27,7 @@ async def model_prediction(payload: model_payload):
 		urban_rural_status = int(payload.urban_rural_status)
 		mental_health = int(payload.mental_health)
 		physical_activity = int(payload.physical_activity)
-		aerobic_recomendation = int(payload.aerobic_recomendation)
+		aerobic_recommendation = int(payload.aerobic_recommendation)
 		high_cholesterol = int(payload.high_cholesterol)
 		asthma = int(payload.asthma)
 		ethnicity = int(payload.ethnicity)
@@ -51,7 +51,7 @@ async def model_prediction(payload: model_payload):
 	new_input = pd.DataFrame([[health, have_private_doctor, last_checkup, last_exercise,
 							high_blood_pressure, use_cholesterol_medicine, had_a_stroke, had_depression, kidney_disease, 
 							diabetes, urban_rural_status, mental_health, physical_activity, 
-							aerobic_recomendation, high_cholesterol, asthma, ethnicity, 
+							aerobic_recommendation, high_cholesterol, asthma, ethnicity, 
 							sex, age, height, weight,
 							smoker_status, is_heavy_drinker]], columns=columns)
 	new_input_scaled = pd.DataFrame(scaler.transform(new_input), columns=new_input.columns)
