@@ -28,7 +28,7 @@ def insert_values_into_table(name_id,
                             is_heavy_drinker_id,
                             odate):
     conn = psycopg2.connect(user = "postgres", 
-                        password = "VONmefjimlVoPExDyYwgvhFdSJJyRNOs", 
+                        password = "", 
                         host = "autorack.proxy.rlwy.net", 
                         port = "45508", 
                         database = "railway")
