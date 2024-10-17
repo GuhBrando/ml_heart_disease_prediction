@@ -30,6 +30,7 @@ def insert_values_into_table(name,
                              is_heavy_drinker_id,
                              model_prediction_result,
                              model_confidence_result,
+                             email,
                              odate):
     conn = psycopg2.connect(user = "postgres", 
                         password = os.environ["postgres_pass"], 
@@ -40,7 +41,7 @@ def insert_values_into_table(name,
 
     cur = conn.cursor()
 
-    cur.execute(f"SELECT id FROM s_patient_name WHERE name = '{name}' AND surname = '{surname}'")
+    cur.execute(f"SELECT id FROM s_patient_name WHERE name = '{name}' AND surname = '{surname}' AND email = '{email}'")
     row_id = cur.fetchall()
     if len(row_id) > 0:
         row_id = row_id[0][0]
@@ -54,11 +55,12 @@ def insert_values_into_table(name,
     else:
         cur.execute(f"SELECT MAX(id) FROM s_patient_name")
         max_id = cur.fetchall()
-        row_id = int(max_id[0][0]) + 1
+        row_id = int(max_id[0][0]) + 1 if len(max_id) > 0 else 0
         cur.execute(f"""INSERT INTO s_patient_name VALUES (
                     {row_id},
                     '{name}',
                     '{surname}',
+                    '{email}',
                     {height},
                     {weight},
                     {sex_id}
