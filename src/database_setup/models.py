@@ -1,5 +1,4 @@
 #from ..config_and_setup import *
-import json
 import os
 import psycopg2
 
@@ -11,8 +10,6 @@ conn = psycopg2.connect(user = "postgres",
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
 cur = conn.cursor()
-
-cur.execute("DROP TABLE s_patient_name CASCADE")
 
 cur.execute("""CREATE TABLE IF NOT EXISTS s_patient_name(
                 ID BIGSERIAL PRIMARY KEY,
