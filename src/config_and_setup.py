@@ -15,9 +15,11 @@ class ModelPredictionError(Exception):
         super().__init__(self.message, self.name)
 
 app = FastAPI()
-
-with open("src/postgres_setup.json", "r") as read_file:
-    postgres_infos = json.load(read_file)
+try:
+    with open("src/postgres_setup.json", "r") as read_file:
+        postgres_infos = json.load(read_file)
+except:
+    pass
 os.environ["postgres_user"] = postgres_infos["username"]
 os.environ["postgres_pass"] = postgres_infos["password"]
 
