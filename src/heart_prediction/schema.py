@@ -27,3 +27,4 @@ class model_payload(BaseModel):
     weight: str 
     smoker_status: str
     is_heavy_drinker: str
+    email: str

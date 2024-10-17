@@ -3,31 +3,34 @@ import os
 import psycopg2
 import uuid
 
-def insert_values_into_table(name_id,
-                            weight,
-                            height,
-                            health_id,
-                            have_private_doctor_id,
-                            last_chekup_id,
-                            last_exercise_id,
-                            high_blood_pressure_id,
-                            use_cholesterol_medicine_id,
-                            had_a_stroke_id,
-                            had_depression_id,
-                            kidney_disease_id,
-                            diabetes_id,
-                            urban_rural_status_id,
-                            mental_health_id,
-                            physical_activity_id,
-                            aerobic_recommendation_id,
-                            high_cholesterol_id,
-                            asthma_id,
-                            ethnicity_id,
-                            sex_id,
-                            age_id,
-                            smoker_status_id,
-                            is_heavy_drinker_id,
-                            odate):
+def insert_values_into_table(name,
+                             surname,
+                             weight,
+                             height,
+                             health_id,
+                             have_private_doctor_id,
+                             last_checkup_id,
+                             last_exercise_id,
+                             high_blood_pressure_id,
+                             use_cholesterol_medicine_id,
+                             had_a_stroke_id,
+                             had_depression_id,
+                             kidney_disease_id,
+                             diabetes_id,
+                             urban_rural_status_id,
+                             mental_health_id,
+                             physical_activity_id,
+                             aerobic_recommendation_id,
+                             high_cholesterol_id,
+                             asthma_id,
+                             ethnicity_id,
+                             sex_id,
+                             age_id,
+                             smoker_status_id,
+                             is_heavy_drinker_id,
+                             model_prediction_result,
+                             model_confidence_result,
+                             odate):
     conn = psycopg2.connect(user = "postgres", 
                         password = os.environ["postgres_pass"], 
                         host = "autorack.proxy.rlwy.net", 
@@ -36,14 +39,40 @@ def insert_values_into_table(name_id,
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
     cur = conn.cursor()
+
+    cur.execute(f"SELECT id FROM s_patient_name WHERE name = '{name}' AND surname = '{surname}'")
+    row_id = cur.fetchall()
+    if len(row_id) > 0:
+        row_id = row_id[0][0]
+        cur.execute(f"""UPDATE s_patient_name 
+                    SET height = {height},
+                    weight = {weight},
+                    sex = {sex_id}
+                    WHERE id = {row_id};
+                    """
+                    )
+    else:
+        cur.execute(f"SELECT MAX(id) FROM s_patient_name")
+        max_id = cur.fetchall()
+        row_id = int(max_id[0][0]) + 1
+        cur.execute(f"""INSERT INTO s_patient_name VALUES (
+                    {row_id},
+                    '{name}',
+                    '{surname}',
+                    {height},
+                    {weight},
+                    {sex_id}
+                    )
+            """
+            )
     cur.execute(f"""INSERT INTO s_model_prediction_results VALUES(
                     '{uuid.uuid4()}',
-                    {name_id},
+                    {row_id},
                     {weight},
                     {height},
                     {health_id},
                     {have_private_doctor_id},
-                    {last_chekup_id},
+                    {last_checkup_id},
                     {last_exercise_id},
                     {high_blood_pressure_id},
                     {use_cholesterol_medicine_id},
@@ -62,35 +91,11 @@ def insert_values_into_table(name_id,
                     {age_id},
                     {smoker_status_id},
                     {is_heavy_drinker_id},
+                    {model_prediction_result},
+                    {model_confidence_result},
                     '{odate}'
                     );
                     """)
 
     cur.close()
     conn.close()
-
-insert_values_into_table(name_id = 0, 
-                         sex_id = 1,  
-                         age_id = 1,  
-                         ethnicity_id = 1,  
-                         height = 192,  
-                         weight = 124,  
-                         urban_rural_status_id = 1,  
-                         health_id = 4,  
-                         have_private_doctor_id = 1,  
-                         last_chekup_id = 1,  
-                         last_exercise_id = 1,  
-                         high_blood_pressure_id = 1,  
-                         use_cholesterol_medicine_id = 2,  
-                         had_a_stroke_id = 2, 
-                         kidney_disease_id = 2,  
-                         diabetes_id = 3,  
-                         mental_health_id = 1,  
-                         physical_activity_id = 2,  
-                         had_depression_id = 7,  
-                         aerobic_recommendation_id = 2,  
-                         high_cholesterol_id = 2,  
-                         asthma_id = 1,  
-                         smoker_status_id = 4,  
-                         is_heavy_drinker_id = 2, 
-                         odate = "2024-08-10")

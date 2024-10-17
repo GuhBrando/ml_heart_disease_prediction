@@ -1,4 +1,4 @@
-#from src.config_and_setup import *
+#from ..config_and_setup import *
 import os
 import psycopg2
 
@@ -12,7 +12,7 @@ conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
 cur = conn.cursor()
 
-# cur.execute("DROP TABLE s_patient_name CASCADE")
+cur.execute("DROP TABLE s_model_prediction_results CASCADE")
 
 cur.execute("""CREATE TABLE IF NOT EXISTS s_patient_name(
                 ID BIGSERIAL PRIMARY KEY,
@@ -182,6 +182,8 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results(
                 age_id SMALLINT REFERENCES s_age (ID),
                 smoker_status_id SMALLINT REFERENCES s_smoker_status (ID),
                 is_heavy_drinker_id SMALLINT REFERENCES s_heavy_drinker (ID),
+                model_prediction_result SMALLINT,
+                model_confidence_result REAL,
                 odate DATE
             );
             """)
