@@ -42,9 +42,9 @@ def insert_values_into_table(name,
     cur = conn.cursor()
 
     cur.execute(f"SELECT id FROM s_patient_name WHERE name = '{name}' AND surname = '{surname}' AND email = '{email}'")
-    row_id = cur.fetchall()
+    row_id = cur.fetchall()[0][0]
     if len(row_id) > 0:
-        row_id = row_id[0][0]
+        row_id = row_id
         cur.execute(f"""UPDATE s_patient_name 
                     SET height = {height},
                     weight = {weight},
@@ -54,8 +54,8 @@ def insert_values_into_table(name,
                     )
     else:
         cur.execute(f"SELECT MAX(id) FROM s_patient_name")
-        max_id = cur.fetchall()
-        row_id = int(max_id[0][0]) + 1 if len(max_id) > 0 else 0
+        max_id = cur.fetchall()[0][0]
+        row_id = int(max_id) + 1 if max_id != None else 0
         cur.execute(f"""INSERT INTO s_patient_name VALUES (
                     {row_id},
                     '{name}',
