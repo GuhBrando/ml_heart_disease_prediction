@@ -1,2 +1,4 @@
 __pycache__
 venv
+.vscode
+postgres_setup.json
