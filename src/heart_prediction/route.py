@@ -24,6 +24,7 @@ async def model_prediction(payload: model_payload):
 	try:
 		name = payload.name
 		surname = payload.surname
+		email = payload.email
 		health = int(payload.health)
 		have_private_doctor = int(payload.have_private_doctor)
 		last_checkup = int(payload.last_checkup)
@@ -101,6 +102,7 @@ async def model_prediction(payload: model_payload):
 							 is_heavy_drinker_id = is_heavy_drinker,
 							 model_prediction_result = predicted_class,
 							 model_confidence_result = round(confidence, 2),
+							 email = email,
 							 odate = str(current_date_time)
 							)
 
