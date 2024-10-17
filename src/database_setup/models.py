@@ -1,8 +1,10 @@
+#from ..config_and_setup import *
+import os
 import psycopg2
 
 
 conn = psycopg2.connect(user = "postgres",
-                        password = "",
+                        password = os.environ["postgres_pass"],
                         host = "autorack.proxy.rlwy.net",
                         port = "45508",
                         database = "railway")
@@ -10,14 +12,15 @@ conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
 cur = conn.cursor()
 
-#cur.execute("DROP TABLE s_aerobic_recomentation")
+cur.execute("DROP TABLE s_model_prediction_results CASCADE")
 
 cur.execute("""CREATE TABLE IF NOT EXISTS s_patient_name(
                 ID BIGSERIAL PRIMARY KEY,
                 name VARCHAR (100),
                 surname VARCHAR (300),
                 height SMALLINT,
-                weight INTEGER
+                weight INTEGER,
+                sex SMALLINT REFERENCES s_sex (ID)
             );
             """)
 
@@ -87,7 +90,7 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_physical_activity(
             );
             """)
 
-cur.execute("""CREATE TABLE IF NOT EXISTS s_aerobic_recomendation(
+cur.execute("""CREATE TABLE IF NOT EXISTS s_aerobic_recommendation(
                 ID SMALLINT PRIMARY KEY,
                 aerobic_recomentation VARCHAR (100)
             );
@@ -171,7 +174,7 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results(
                 urban_rural_status_id SMALLINT REFERENCES s_urban_rural_status (ID),
                 mental_health_id SMALLINT REFERENCES s_mental_health (ID),
                 physical_activity_id SMALLINT REFERENCES s_physical_activity (ID),
-                aerobic_recomendation_id SMALLINT REFERENCES s_aerobic_recomendation (ID),
+                aerobic_recommendation_id SMALLINT REFERENCES s_aerobic_recommendation (ID),
                 high_cholesterol_id SMALLINT REFERENCES s_high_cholesterol (ID),
                 asthma_id SMALLINT REFERENCES s_asthma (ID),
                 ethnicity_id SMALLINT REFERENCES s_ethnicity (ID),
@@ -179,6 +182,8 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results(
                 age_id SMALLINT REFERENCES s_age (ID),
                 smoker_status_id SMALLINT REFERENCES s_smoker_status (ID),
                 is_heavy_drinker_id SMALLINT REFERENCES s_heavy_drinker (ID),
+                model_prediction_result SMALLINT,
+                model_confidence_result REAL,
                 odate DATE
             );
             """)
