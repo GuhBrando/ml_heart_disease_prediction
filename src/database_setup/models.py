@@ -2,7 +2,6 @@
 import os
 import psycopg2
 
-
 conn = psycopg2.connect(user = "postgres",
                         password = os.environ["postgres_pass"],
                         host = "autorack.proxy.rlwy.net",
@@ -12,12 +11,11 @@ conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
 cur = conn.cursor()
 
-cur.execute("DROP TABLE s_model_prediction_results CASCADE")
-
 cur.execute("""CREATE TABLE IF NOT EXISTS s_patient_name(
                 ID BIGSERIAL PRIMARY KEY,
                 name VARCHAR (100),
                 surname VARCHAR (300),
+                email VARCHAR (300),
                 height SMALLINT,
                 weight INTEGER,
                 sex SMALLINT REFERENCES s_sex (ID)
@@ -157,10 +155,10 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_last_exercise(
             """)
 
 cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results(
-                UUID uuid PRIMARY KEY,
+                UUID uuid,
                 name_id BIGINT REFERENCES s_patient_name (ID),
-                weight INTEGER,
-                height SMALLINT,
+                weight INTEGER NOT NULL,
+                height SMALLINT NOT NULL,
                 health_id SMALLINT REFERENCES s_health (ID),
                 have_private_doctor_id SMALLINT REFERENCES s_private_doctor (ID),
                 last_checkup_id SMALLINT REFERENCES s_last_checkup (ID),
@@ -182,11 +180,21 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results(
                 age_id SMALLINT REFERENCES s_age (ID),
                 smoker_status_id SMALLINT REFERENCES s_smoker_status (ID),
                 is_heavy_drinker_id SMALLINT REFERENCES s_heavy_drinker (ID),
-                model_prediction_result SMALLINT,
-                model_confidence_result REAL,
-                odate DATE
-            );
+                model_prediction_result SMALLINT NOT NULL,
+                model_confidence_result REAL NOT NULL,
+                odate DATE NOT NULL,
+                PRIMARY KEY (UUID, odate)
+            ) PARTITION BY RANGE (odate);
             """)
+
+cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results_10_2024 PARTITION OF s_model_prediction_results
+                FOR VALUES FROM ('2024-10-01') TO ('2024-10-31');""")
+
+cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results_11_2024 PARTITION OF s_model_prediction_results
+                FOR VALUES FROM ('2024-11-01') TO ('2024-11-30');""")
+
+cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results_12_2024 PARTITION OF s_model_prediction_results
+                FOR VALUES FROM ('2024-12-01') TO ('2024-12-31');""")
 
 # EXEMPLO
 
