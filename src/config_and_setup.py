@@ -21,6 +21,7 @@ try:
     os.environ["postgres_user"] = postgres_infos["username"]
     os.environ["postgres_pass"] = postgres_infos["password"]
 except:
+    print("ERROR")
     pass
 
 class GlobalVariables():
