@@ -32,11 +32,12 @@ def insert_values_into_table(name,
                              model_confidence_result,
                              email,
                              odate):
+    
     conn = psycopg2.connect(user = "postgres", 
-                        password = os.environ["postgres_pass"], 
-                        host = "autorack.proxy.rlwy.net", 
-                        port = "45508", 
-                        database = "railway")
+                            password = os.environ["postgres_pass"], 
+                            host = "autorack.proxy.rlwy.net", 
+                            port = "45508", 
+                            database = "railway")
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
     cur = conn.cursor()
