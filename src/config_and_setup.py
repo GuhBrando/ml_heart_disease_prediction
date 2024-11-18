@@ -4,6 +4,8 @@ import os
 from fastapi import APIRouter, FastAPI
 import logging
 
+import joblib
+
 logger = logging.getLogger("my_app")
 
 class ModelPredictionError(Exception):
@@ -21,6 +23,7 @@ try:
     os.environ["postgres_user"] = postgres_infos["username"]
     os.environ["postgres_pass"] = postgres_infos["password"]
 except:
+    print("ERROR")
     pass
 
 class GlobalVariables():

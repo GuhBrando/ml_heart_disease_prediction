@@ -20,22 +20,3 @@ global_variables = GlobalVariables()
 
 app.include_router(health_check)
 app.include_router(model_prection_route, prefix = os.environ["API_VERSION"])
-
-# def create_exception_handler(
-#     status_code: int, initial_detail: str
-# ) -> Callable[[Request, ModelPredictionError], JSONResponse]:
-#     detail = {"message": initial_detail}  # Using a dictionary to hold the detail
-
-#     async def exception_handler(_: Request, exc: ModelPredictionError) -> JSONResponse:
-#         if exc.message:
-#             detail["message"] = exc.message
-
-#         if exc.name:
-#             detail["message"] = f"{detail['message']} [{exc.name}]"
-
-#         logger.error(exc)
-#         return JSONResponse(
-#             status_code=status_code, content={"detail": detail["message"]}
-#         )
-
-#     return exception_handler

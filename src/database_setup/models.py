@@ -1,4 +1,5 @@
 #from ..config_and_setup import *
+import json
 import os
 import psycopg2
 
@@ -60,7 +61,7 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_had_stroke(
 
 cur.execute("""CREATE TABLE IF NOT EXISTS s_had_depression(
                 ID SMALLINT PRIMARY KEY,
-                had_stroke VARCHAR (100)
+                had_depression VARCHAR (100)
             );
             """)
 
@@ -90,7 +91,7 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_physical_activity(
 
 cur.execute("""CREATE TABLE IF NOT EXISTS s_aerobic_recommendation(
                 ID SMALLINT PRIMARY KEY,
-                aerobic_recomentation VARCHAR (100)
+                aerobic_recommendation VARCHAR (100)
             );
             """)
 
@@ -109,12 +110,6 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_asthma(
 cur.execute("""CREATE TABLE IF NOT EXISTS s_ethnicity(
                 ID SMALLINT PRIMARY KEY,
                 ethnicity VARCHAR (100)
-            );
-            """)
-
-cur.execute("""CREATE TABLE IF NOT EXISTS s_high_cholesterol(
-                ID SMALLINT PRIMARY KEY,
-                high_cholesterol VARCHAR (100)
             );
             """)
 
@@ -187,6 +182,62 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results(
             ) PARTITION BY RANGE (odate);
             """)
 
+cur.execute("""CREATE VIEW g_model_true_information AS
+                SELECT 
+                    s_patient_name.name AS name,
+                    s_patient_name.surname AS surname,
+                    s_model_prediction_results.weight AS weight,
+                    s_model_prediction_results.height AS height,
+                    s_health.health AS health,
+                    s_private_doctor.have_private_doctor AS have_private_doctor,
+                    s_last_checkup.last_checkup AS last_checkup,
+                    s_last_exercise.last_exercise AS last_exercise,
+                    s_high_blood_pressure.high_blood_pressure AS high_blood_pressure,
+                    s_use_cholesterol_meds.use_cholesterol_med AS use_cholesterol_med,
+                    s_had_stroke.had_stroke AS had_stroke,
+                    s_had_depression.had_depression AS had_depression,
+                    s_kidney_disease.kidney_disease AS kidney_disease,
+                    s_diabetes.diabetes AS diabetes,
+                    s_urban_rural_status.urban_rural_status AS urban_rural_status,
+                    s_mental_health.mental_health AS mental_health,
+                    s_physical_activity.physical_activity AS physical_activity,
+                    s_aerobic_recommendation.aerobic_recommendation AS aerobic_recommendation,
+                    s_high_cholesterol.high_cholesterol AS high_cholesterol,
+                    s_asthma.asthma AS asthma,
+                    s_ethnicity.ethnicity AS ethnicity,
+                    s_sex.sex AS sex,
+                    s_age.age AS age,
+                    s_smoker_status.smoker_status AS smoker_status,
+                    s_heavy_drinker.heavy_drinker AS heavy_drinker,
+                    model_prediction_result,
+                    model_confidence_result,
+                    odate
+                FROM s_model_prediction_results
+                JOIN s_patient_name ON s_model_prediction_results.name_id = s_patient_name.id
+                JOIN s_age ON s_model_prediction_results.age_id = s_age.id
+                JOIN s_health ON s_model_prediction_results.health_id = s_health.id
+                JOIN s_private_doctor ON s_model_prediction_results.have_private_doctor_id = s_private_doctor.id
+                JOIN s_last_checkup ON s_model_prediction_results.last_checkup_id =  s_last_checkup.id
+                JOIN s_last_exercise ON s_model_prediction_results.last_exercise_id =  s_last_exercise.id
+                JOIN s_high_blood_pressure ON s_model_prediction_results.high_blood_pressure_id =  s_high_blood_pressure.id
+                JOIN s_use_cholesterol_meds ON s_model_prediction_results.use_cholesterol_meds_id =  s_use_cholesterol_meds.id
+                JOIN s_had_stroke ON s_model_prediction_results.had_stroke_id =  s_had_stroke.id
+                JOIN s_had_depression ON s_model_prediction_results.had_depression_id =  s_had_depression.id
+                JOIN s_kidney_disease ON s_model_prediction_results.kidney_disease_id =  s_kidney_disease.id
+                JOIN s_diabetes ON s_model_prediction_results.diabetes_id =  s_diabetes.id
+                JOIN s_urban_rural_status ON s_model_prediction_results.urban_rural_status_id =  s_urban_rural_status.id
+                JOIN s_mental_health ON s_model_prediction_results.mental_health_id =  s_mental_health.id
+                JOIN s_physical_activity ON s_model_prediction_results.physical_activity_id =  s_physical_activity.id
+                JOIN s_aerobic_recommendation ON s_model_prediction_results.aerobic_recommendation_id =  s_aerobic_recommendation.id
+                JOIN s_high_cholesterol ON s_model_prediction_results.high_cholesterol_id =  s_high_cholesterol.id
+                JOIN s_asthma ON s_model_prediction_results.asthma_id =  s_asthma.id
+                JOIN s_ethnicity ON s_model_prediction_results.ethnicity_id =  s_ethnicity.id
+                JOIN s_sex ON s_model_prediction_results.sex_id =  s_sex.id
+                JOIN s_smoker_status ON s_model_prediction_results.smoker_status_id =  s_smoker_status.id
+                JOIN s_heavy_drinker ON s_model_prediction_results.is_heavy_drinker_id =  s_heavy_drinker.id
+            ;""")
+
+
 cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results_10_2024 PARTITION OF s_model_prediction_results
                 FOR VALUES FROM ('2024-10-01') TO ('2024-10-31');""")
 
@@ -195,44 +246,6 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results_11_2024 PAR
 
 cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results_12_2024 PARTITION OF s_model_prediction_results
                 FOR VALUES FROM ('2024-12-01') TO ('2024-12-31');""")
-
-# EXEMPLO
-
-# -- Criar a tabela clientes
-# CREATE TABLE clientes (
-#     id SERIAL PRIMARY KEY,
-#     nome VARCHAR(100)
-# );
-
-# -- Criar a tabela pedidos
-# CREATE TABLE pedidos (
-#     id SERIAL PRIMARY KEY,
-#     cliente_id INT,
-#     data DATE,
-#     FOREIGN KEY (cliente_id) REFERENCES clientes(id)
-# );
-
-# -- Criar a tabela relatorio_pedidos com JOIN
-# CREATE TABLE relatorio_pedidos AS
-# SELECT 
-#     c.id AS cliente_id,
-#     c.nome AS cliente_nome,
-#     p.id AS pedido_id,
-#     p.data AS pedido_data
-# FROM clientes c
-# JOIN pedidos p ON c.id = p.cliente_id;
-
-# -- Adicionar novos campos
-# ALTER TABLE relatorio_pedidos
-# ADD COLUMN status VARCHAR(50);
-
-# -- Definir chaves estrangeiras
-# ALTER TABLE relatorio_pedidos
-# ADD CONSTRAINT fk_cliente
-# FOREIGN KEY (cliente_id) REFERENCES clientes(id),
-# ADD CONSTRAINT fk_pedido
-# FOREIGN KEY (pedido_id) REFERENCES pedidos(id);
-
 
 conn.commit()
 
