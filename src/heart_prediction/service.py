@@ -4,7 +4,6 @@ import os
 import warnings
 warnings.warn = warn
 
-from fastapi.responses import JSONResponse
 import pandas as pd
 from fastapi import HTTPException
 import joblib
