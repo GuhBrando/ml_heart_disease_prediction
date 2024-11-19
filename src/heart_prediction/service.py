@@ -1,6 +1,5 @@
 def warn(*args, **kwargs):
     pass
-import os
 import warnings
 warnings.warn = warn
 

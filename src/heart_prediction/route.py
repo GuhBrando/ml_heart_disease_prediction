@@ -1,6 +1,4 @@
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse
-
 from src.heart_prediction.service import ModelPrediction
 from src.heart_prediction.schema import model_payload
 
