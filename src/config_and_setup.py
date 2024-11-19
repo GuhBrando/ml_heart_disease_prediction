@@ -4,8 +4,6 @@ import os
 from fastapi import APIRouter, FastAPI
 import logging
 
-import joblib
-
 logger = logging.getLogger("my_app")
 
 class ModelPredictionError(Exception):

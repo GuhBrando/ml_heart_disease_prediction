@@ -1,6 +1,5 @@
 def warn(*args, **kwargs):
     pass
-import os
 import warnings
 warnings.warn = warn
 
@@ -134,4 +133,5 @@ class ModelPrediction:
                                 odate = str(current_date_time)
                                 )
 
-        resultado = "Você possui um risco significativo de desenvolver uma doença cardiovascular" if predicted_class == 1 else "Você não possui um risco significativo de desenvolver uma doença cardiovascular"
+        result = "Você possui um risco significativo de desenvolver uma doença cardiovascular" if predicted_class == 1 else "Você não possui um risco significativo de desenvolver uma doença cardiovascular"
+        return result
