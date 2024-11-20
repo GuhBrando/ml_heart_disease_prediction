@@ -182,7 +182,7 @@ cur.execute("""CREATE TABLE IF NOT EXISTS s_model_prediction_results(
             ) PARTITION BY RANGE (odate);
             """)
 
-cur.execute("""CREATE VIEW g_model_true_information AS
+cur.execute("""create or replace view g_model_true_information AS
                 SELECT 
                     s_patient_name.name AS name,
                     s_patient_name.surname AS surname,
