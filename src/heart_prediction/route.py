@@ -8,4 +8,4 @@ model = ModelPrediction()
 def model_prediction(payload: model_payload):
 
 	result = model.predict(payload.model_dump())
-	return {result}
+	return {"output": result}
