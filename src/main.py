@@ -16,6 +16,7 @@ app.add_middleware(
 )
 
 global_variables = GlobalVariables()
+from src.database_setup.models import *
 
 app.include_router(health_check)
 app.include_router(model_prection_route, prefix = os.environ["API_VERSION"])
