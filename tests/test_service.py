@@ -5,7 +5,6 @@ import numpy as np
 from unittest.mock import patch, MagicMock
 from src.heart_prediction.service import ModelPrediction
 
-# Mocks para evitar carregar modelos reais durante os testes
 @pytest.fixture
 def mock_model(mocker):
     mock_rf_model = MagicMock()
