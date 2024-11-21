@@ -1,10 +1,7 @@
 import json
 import os
-
-from fastapi import APIRouter, FastAPI
 import logging
-
-logger = logging.getLogger("my_app")
+from fastapi import APIRouter, FastAPI
 
 class ModelPredictionError(Exception):
     
@@ -14,7 +11,12 @@ class ModelPredictionError(Exception):
 
         super().__init__(self.message, self.name)
 
-app = FastAPI()
+class GlobalVariables():
+    def __init__(self):
+        os.environ["API_VERSION"] = "/api/1.0"
+
+logger = logging.getLogger("my_app")
+        
 try:
     with open("src/postgres_setup.json", "r") as read_file:
         postgres_infos = json.load(read_file)
@@ -24,10 +26,7 @@ except:
     print("ERROR")
     pass
 
-class GlobalVariables():
-    def __init__(self):
-        os.environ["API_VERSION"] = "/api/1.0"
-
+app = FastAPI()
 route = APIRouter()
 
 @route.get("/")
