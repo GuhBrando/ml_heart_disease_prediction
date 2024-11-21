@@ -133,5 +133,5 @@ class ModelPrediction:
                                 odate = str(current_date_time)
                                 )
 
-        result = "Você possui um risco significativo de desenvolver uma doença cardiovascular" if predicted_class == 1 else "Você não possui um risco significativo de desenvolver uma doença cardiovascular"
+        result = f"Você possui um risco significativo de desenvolver uma doença cardiovascular, com uma confiança de {confidence:.2f}%" if predicted_class == 1 else f"Você não possui um risco significativo de desenvolver uma doença cardiovascular, com uma confiança de {confidence:.2f}%"
         return result
