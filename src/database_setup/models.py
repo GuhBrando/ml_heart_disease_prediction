@@ -1,7 +1,10 @@
 #from ..config_and_setup import *
-import json
+import csv
 import os
+import numpy as np
+import pandas as pd
 import psycopg2
+import psycopg2.extras
 
 conn = psycopg2.connect(user = "postgres",
                         password = os.environ["postgres_pass"],
@@ -11,6 +14,53 @@ conn = psycopg2.connect(user = "postgres",
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
 cur = conn.cursor()
+
+def ingest_data():
+    data_reader = pd.read_csv("./b_model_prediction.csv", sep=',', decimal='.')
+    data_reader = data_reader.replace(np.nan, None)
+    li = data_reader.values.tolist()
+
+    with conn.cursor() as cur:
+        insert_query = "INSERT INTO b_model_prediction VALUES %s"
+        psycopg2.extras.execute_values(cur, insert_query, li, page_size=1000)
+        conn.commit()
+
+cur.execute("""CREATE TABLE IF NOT EXISTS b_model_prediction (
+                GENHLTH INTEGER,
+                PERSDOC3 INTEGER,
+                MEDCOST1 INTEGER,
+                CHECKUP1 INTEGER,
+                EXERANY2 INTEGER,
+                BPHIGH6 INTEGER,
+                CHOLMED3 INTEGER,
+                CVDSTRK3 INTEGER,
+                ADDEPEV3 INTEGER,
+                CHCKDNY2 INTEGER,
+                DIABETE4 INTEGER,
+                EDUCA INTEGER,
+                INCOME3 INTEGER,
+                COVIDPO1 INTEGER,
+                _URBSTAT INTEGER,
+                _MENT14D INTEGER,
+                _PACAT3 INTEGER,
+                _PAINDX3 INTEGER,
+                _RFCHOL3 INTEGER,
+                _MICHD INTEGER,
+                _ASTHMS1 INTEGER,
+                _MRACE1 INTEGER,
+                _SEX INTEGER,
+                _AGEG5YR INTEGER,
+                HTM4 FLOAT,
+                WTKG3 FLOAT,
+                _SMOKER3 INTEGER,
+                _RFDRHV8 INTEGER
+            );""")
+
+sql = 'SELECT count(*) from b_model_prediction;'
+cur.execute(sql)
+results = cur.fetchone()
+if results[0] <= 0:
+    ingest_data()
 
 cur.execute("""CREATE TABLE IF NOT EXISTS s_patient_name(
                 ID BIGSERIAL PRIMARY KEY,
